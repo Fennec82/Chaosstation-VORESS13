@@ -94,7 +94,7 @@
 	surgery_name = "Repair Burns"
 	allowed_tools = list(
 	/obj/item/surgical/bioregen = 100,
-    /obj/item/surgical/FixOVein = 90,
+	/obj/item/surgical/FixOVein = 90,
 	/obj/item/stack/medical/advanced/ointment = 75,
 	/obj/item/stack/medical/ointment = 50,
 	/obj/item/tape_roll = 30,
