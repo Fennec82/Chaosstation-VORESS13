@@ -1908,7 +1908,7 @@
 	icon = 'icons/mob/human_face_vr.dmi'
 	icon_add = 'icons/mob/human_face_vr_add.dmi'
 	icon_state = "shadekin_rivyr"
-	ckeys_allowed = list("verysoft")
+//	ckeys_allowed = list("verysoft")
 	species_allowed = list(SPECIES_SHADEKIN, SPECIES_SHADEKIN_CREW)
 	gender = NEUTER
 
