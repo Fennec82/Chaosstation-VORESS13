@@ -69,7 +69,7 @@
 
 	if (recipe.time)
 		to_chat(user, span_notice("Building [recipe.title] ..."))
-		if (!do_after(user, recipe.time))
+		if (!do_after(user, recipe.time, target = src))
 			return
 
 	if (use(required))
@@ -128,6 +128,7 @@
 	pass_color = TRUE
 
 	var/bag_material = MAT_CLOTH
+	custom_handling = TRUE
 
 /obj/item/stack/emptysandbag/Initialize(mapload, var/amt, var/bag_mat)
 	. = ..(mapload, amt)
@@ -138,8 +139,11 @@
 		return INITIALIZE_HINT_QDEL
 	color = M.icon_colour
 
-/obj/item/stack/emptysandbag/attack_self(var/mob/user)
-	while(do_after(user, 1 SECOND) && can_use(1) && istype(get_turf(src), /turf/simulated/floor/outdoors))
+/obj/item/stack/emptysandbag/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
+	while(do_after(user, 1 SECOND, target = src) && can_use(1) && istype(get_turf(src), /turf/simulated/floor/outdoors))
 		use(1)
 		var/obj/item/stack/sandbags/SB = new (get_turf(src), 1, bag_material)
 		SB.color = color

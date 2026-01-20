@@ -37,7 +37,7 @@
 			to_chat(user, span_warning("You need to build a prescription from someone first! Use the kit on someone."))
 			return
 
-		if(do_after(user,5 SECONDS))
+		if(do_after(user, 5 SECONDS, target = target))
 			G.prescribe(user)
 			scrip_loaded = 0
 
@@ -49,7 +49,7 @@
 			return
 
 		T.visible_message("[user] begins making measurements for prescription lenses for [target].","[user] begins measuring your eyes. Hold still!")
-		if(do_after(user,5 SECONDS,T))
+		if(do_after(user, 5 SECONDS, target = T))
 			T.flash_eyes()
 			scrip_loaded = 1
 			T.visible_message("[user] finishes making prescription lenses for [target].",span_warning("Gah, that's bright!"))
@@ -91,7 +91,9 @@
 		)
 
 /obj/item/clothing/glasses/sunglasses/sechud/tactical_sec_vis/attack_self(mob/user)
-	. = ..()
+	. = ..(user)
+	if(.)
+		return TRUE
 	if(!istype(user) || user.incapacitated())
 		return
 
@@ -104,7 +106,6 @@
 		user.update_inv_glasses()
 		user.update_mob_action_buttons()
 		to_chat(user, span_notice("Your [src] now displays [choice] ."))
-		return 1
 
 /*---Tajaran-specific Eyewear---*/
 

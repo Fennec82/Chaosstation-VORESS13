@@ -7,7 +7,7 @@ Deployable items
 	name = "deployable"
 	desc = "deployable"
 	icon = 'icons/obj/objects.dmi'
-	req_access = list(access_security)//I'm changing this until these are properly tested./N
+	req_access = list(ACCESS_SECURITY)//I'm changing this until these are properly tested./N
 
 /obj/machinery/deployable/barrier
 	name = "deployable barrier"
@@ -19,7 +19,7 @@ Deployable items
 	var/health = 100.0
 	var/maxhealth = 100.0
 	var/locked = 0.0
-//	req_access = list(access_maint_tunnels)
+//	req_access = list(ACCESS_MAINT_TUNNELS)
 
 /obj/machinery/deployable/barrier/Initialize(mapload)
 	. = ..()
@@ -50,12 +50,12 @@ Deployable items
 		if(health < maxhealth)
 			health = maxhealth
 			emagged = 0
-			req_access = list(access_security)
+			req_access = list(ACCESS_SECURITY)
 			visible_message(span_warning("[user] repairs \the [src]!"))
 			return
 		else if(emagged > 0)
 			emagged = 0
-			req_access = list(access_security)
+			req_access = list(ACCESS_SECURITY)
 			visible_message(span_warning("[user] repairs \the [src]!"))
 			return
 		return
@@ -97,7 +97,7 @@ Deployable items
 			CheckHealth()
 			return
 
-/obj/machinery/deployable/barrier/emp_act(severity)
+/obj/machinery/deployable/barrier/emp_act(severity, recursive)
 	if(stat & (BROKEN|NOPOWER))
 		return
 	if(prob(50/severity))

@@ -21,6 +21,9 @@
 	var/genesource = "unknown"
 
 /obj/item/disk/xenobio/attack_self(var/mob/user as mob)
+	. = ..(user)
+	if(.)
+		return TRUE
 	if(genes.len)
 		var/choice = tgui_alert(user, "Are you sure you want to wipe the disk?", "Xenobiological Data", list("No", "Yes"))
 		if(src && user && genes && choice && choice == "Yes" && user.Adjacent(get_turf(src)))
@@ -271,11 +274,11 @@
 		else
 			if(isxeno(G.affecting))
 				var/mob/living/simple_mob/xeno/X = G.affecting
-				if(do_after(user, 30) && X.Adjacent(src) && user.Adjacent(src) && X.Adjacent(user) && !occupant)
+				if(do_after(user, 3 SECONDS, target = src) && X.Adjacent(src) && user.Adjacent(src) && X.Adjacent(user) && !occupant)
 					user.drop_from_inventory(G)
 					X.forceMove(src)
 					occupant = X
-					to_chat(user, "You load [X] into [src]."
+					to_chat(user, "You load [X] into [src].")
 			else
 				to_chat(user, span_danger("This specimen is incompatible with the machinery!"))
 		return
@@ -373,11 +376,8 @@
 
 	user.visible_message(span_danger("[user] starts to put [victim] into the [src]!"))
 	src.add_fingerprint(user)
-	if(do_after(user, 30) && victim.Adjacent(src) && user.Adjacent(src) && victim.Adjacent(user) && !occupant)
+	if(do_after(user, 3 SECONDS, target = src) && victim.Adjacent(src) && user.Adjacent(src) && victim.Adjacent(user) && !occupant)
 		user.visible_message(span_danger("[user] stuffs [victim] into the [src]!"))
-		if(victim.client)
-			victim.client.perspective = EYE_PERSPECTIVE
-			victim.client.eye = src
 		victim.forceMove(src)
 		occupant = victim
 
