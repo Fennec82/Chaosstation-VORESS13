@@ -4,7 +4,7 @@
 	icon = 'icons/obj/stationobjs.dmi'
 	icon_state = "register_idle"
 	flags = NOBLUDGEON
-	req_access = list(access_heads)
+	req_access = list(ACCESS_HEADS)
 	anchored = TRUE
 
 	var/locked = 1
@@ -62,7 +62,7 @@
 		interact(user)
 
 
-/obj/machinery/cash_register/AltClick(mob/user)
+/obj/machinery/cash_register/click_alt(mob/user)
 	if(Adjacent(user))
 		open_cash_box()
 
@@ -497,7 +497,7 @@
 		user.visible_message(span_warning("\The [user] begins unsecuring \the [src] from the floor."),
 							"You begin unsecuring \the [src] from the floor.")
 	playsound(src, W.usesound, 50, 1)
-	if(!do_after(user, 20 * W.toolspeed))
+	if(!do_after(user, 2 SECONDS * W.toolspeed, target = src))
 		manipulating = 0
 		return
 	if(!anchored)

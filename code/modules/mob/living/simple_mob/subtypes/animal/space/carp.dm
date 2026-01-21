@@ -160,7 +160,7 @@
 	B.digest_brute = 0.5
 	B.digest_burn = 0.5
 	B.escapechance = 20
-	B.belly_fullscreen = "anim_belly"
+	B.belly_fullscreen = "VBOanim_belly1"
 	B.belly_fullscreen_color = "#660021"
 	B.belly_fullscreen_color2 = "#660021"
 	B.fancy_vore = 1
@@ -221,7 +221,7 @@
 	name = "great white carp"
 	desc = "A very rare breed of carp- and a very aggressive one."
 	icon = 'icons/mob/vore64x64.dmi'
-	icon_dead = "megacarp_dead"
+	icon_dead = "megacarp-dead"
 	icon_living = "megacarp"
 	icon_state = "megacarp"
 	vore_icons = SA_ICON_LIVING

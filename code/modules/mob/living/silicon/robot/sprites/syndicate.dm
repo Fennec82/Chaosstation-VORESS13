@@ -1,12 +1,10 @@
 // Syndie borg sprites
-
-/* none yet
+/*
 /datum/robot_sprite/syndie
 	module_type = list("Protector", "Mechanist", "Combat Medic")
 	sprite_icon = 'icons/mob/robot/syndie.dmi'
 	sprite_hud_icon_state = "malf"
 */
-
 // Wide/dogborg sprites
 
 /datum/robot_sprite/dogborg/syndie
@@ -24,6 +22,7 @@
 /datum/robot_sprite/dogborg/syndie/drake
 	name = "Drake"
 	sprite_icon_state = "drake"
+	has_vore_belly_resting_sprites = TRUE
 
 /datum/robot_sprite/dogborg/syndie/smolraptor
 	sprite_icon = 'icons/mob/robot/smallraptors/smolraptor_syndie.dmi'

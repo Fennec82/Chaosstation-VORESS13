@@ -46,6 +46,10 @@
 	release_force = 20
 	release_speed = 15
 	var/drawn = FALSE
+	is_bow = TRUE
+
+	///Var for attack_self chain
+	var/hardlight = FALSE
 
 /obj/item/gun/launcher/crossbow/bow/update_release_force(obj/item/projectile)
 	return 0
@@ -78,6 +82,11 @@
 		return ..()
 
 /obj/item/gun/launcher/crossbow/bow/attack_self(mob/living/user)
+	. = ..(user)
+	if(.)
+		return TRUE
+	if(hardlight)
+		return FALSE
 	if(drawn)
 		user.visible_message(span_infoplain(span_bold("[user]") + " relaxes the tension on [src]'s string."),span_infoplain("You relax the tension on [src]'s string."))
 		drawn = FALSE
@@ -95,7 +104,7 @@
 
 	current_user = user
 	user.visible_message(span_infoplain(span_bold("[user]") + " begins to draw back the string of [src]."),span_notice("You begin to draw back the string of [src]."))
-	if(do_after(user, 25, src))
+	if(do_after(user, 25, target = src))
 		drawn = TRUE
 		user.visible_message(span_infoplain(span_bold("[user]") + "draws the string on [src] back fully!"), span_infoplain("You draw the string on [src] back fully!"))
 	update_icon()
@@ -127,7 +136,10 @@
 	QDEL_NULL(bolt)
 	update_icon()
 
-/obj/item/gun/launcher/crossbow/bow/hardlight/attack_self(mob/living/user)
+/obj/item/gun/launcher/crossbow/bow/hardlight/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
 	if(drawn)
 		user.visible_message(span_infoplain(span_bold("[user]") + " relaxes the tension on [src]'s string."),span_infoplain("You relax the tension on [src]'s string."))
 		drawn = FALSE
