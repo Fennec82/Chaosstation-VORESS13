@@ -120,7 +120,7 @@
 			return
 		to_chat(user, span_notice("You start dismantling \the [src]..."))
 		playsound(src, I.usesound, 50, 1)
-		if(do_after(user, 30))
+		if(do_after(user, 3 SECONDS, target = src))
 			user.visible_message(span_notice("[user] dismantles \the [src]."), span_notice("You dismantle \the [src]."))
 			new /obj/item/beehive_assembly(loc)
 			qdel(src)
@@ -135,7 +135,7 @@
 			to_chat(user, span_notice("The bees won't let you take the honeycombs out like this, smoke them first."))
 			return
 		user.visible_message(span_notice("[user] starts taking the honeycombs out of \the [src]."), span_notice("You start taking the honeycombs out of \the [src]..."))
-		while(honeycombs >= 100 && length(frames) && do_after(user, 30))
+		while(honeycombs >= 100 && length(frames) && do_after(user, 3 SECONDS, target = src))
 			var/obj/item/honey_frame/H = pop(frames)
 			H.honey = 20
 			honeycombs -= 100
@@ -290,9 +290,12 @@
 	icon = 'icons/obj/apiary_bees_etc.dmi'
 	icon_state = "apiary"
 
-/obj/item/beehive_assembly/attack_self(var/mob/user)
+/obj/item/beehive_assembly/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
 	to_chat(user, span_notice("You start assembling \the [src]..."))
-	if(do_after(user, 30))
+	if(do_after(user, 3 SECONDS, target = src))
 		user.visible_message(span_notice("[user] constructs a beehive."), span_notice("You construct a beehive."))
 		new /obj/machinery/beehive(get_turf(user))
 		user.drop_from_inventory(src)
@@ -305,7 +308,7 @@
 	desc = "Soft substance produced by bees. Used to make candles."
 	icon = 'icons/obj/beekeeping.dmi'
 	icon_state = "wax"
-	default_type = "wax"
+	default_type = MAT_WAX
 	pass_color = TRUE
 	strict_color_stacking = TRUE
 
@@ -314,7 +317,7 @@
 	recipes = wax_recipes
 
 /datum/material/wax
-	name = "wax"
+	name = MAT_WAX
 	stack_type = /obj/item/stack/material/wax
 	icon_colour = "#fff343"
 	melting_point = T0C+300

@@ -2,7 +2,7 @@
 /obj/item/healthanalyzer/scroll //reports all of the above, as well as name and quantity of nonmed reagents in stomach
 	name = "scroll of divination"
 	desc = "An unusual scroll that appears to report all of the details of a person's health when waved near them. Oddly, it seems to have a little metal chip up near the handles..."
-	advscan = 3
+	advscan = SCANNABLE_SECRETIVE
 	origin_tech = list(TECH_MAGNET = 7, TECH_BIO = 8)
 	icon_state = "health_scroll"
 
@@ -86,7 +86,7 @@
 			to_chat(user, span_notice("\The [src] already has someone buckled to it."))
 			return
 		user.visible_message(span_notice("[user] attempts to buckle [affecting] into \the [src]!"))
-		if(do_after(user, 20, G.affecting))
+		if(do_after(user, 2 SECONDS, target = G.affecting))
 			affecting.loc = loc
 			spawn(0)
 				if(buckle_mob(affecting))
@@ -156,7 +156,7 @@
 				if(open && !swirlie)
 					user.visible_message(span_danger("[user] starts to give [GM.name] a swirlie!"), span_notice("You start to give [GM.name] a swirlie!"))
 					swirlie = GM
-					if(do_after(user, 30, GM))
+					if(do_after(user, 3 SECONDS, target = GM))
 						user.visible_message(span_danger("[user] gives [GM.name] a swirlie!"), span_notice("You give [GM.name] a swirlie!"), "You hear a toilet flushing.")
 						if(!GM.internal)
 							GM.adjustOxyLoss(5)
@@ -222,7 +222,7 @@
 				span_notice("You start to fix part of the cooking pot.") \
 			)
 			playsound(src, O.usesound, 50, 1)
-			if (do_after(user,20 * O.toolspeed))
+			if (do_after(user, 2 SECONDS * O.toolspeed, target = src))
 				user.visible_message( \
 					span_infoplain(span_bold("\The [user]") + " fixes part of the cooking pot."), \
 					span_notice("You have fixed part of the cooking pot.") \
@@ -233,7 +233,7 @@
 				span_infoplain(span_bold("\The [user]") + " starts to fix part of the cooking pot."), \
 				span_notice("You start to fix part of the cooking pot.") \
 			)
-			if (do_after(user,20 * O.toolspeed))
+			if (do_after(user, 2 SECONDS * O.toolspeed, target = src))
 				user.visible_message( \
 					span_infoplain(span_bold("\The [user]") + " fixes the cooking pot."), \
 					span_notice("You have fixed the cooking pot.") \
@@ -252,7 +252,7 @@
 				span_bold("\The [user]") + "starts to clean the cooking pot.", \
 				span_notice("You start to clean the cooking pot.") \
 			)
-			if (do_after(user,20))
+			if (do_after(user, 2 SECONDS, target = src))
 				user.visible_message( \
 					span_notice("\The [user] has cleaned the cooking pot."), \
 					span_notice("You have cleaned the cooking pot.") \
@@ -340,7 +340,7 @@
 				span_notice("\The [user] begins [src.anchored ? "unsecuring" : "securing"] the cooking pot."), \
 				span_notice("You attempt to [src.anchored ? "unsecure" : "secure"] the cooking pot.")
 				)
-			if (do_after(user,20/O.toolspeed))
+			if (do_after(user, (2 SECONDS)/O.toolspeed, target = src))
 				user.visible_message( \
 				span_notice("\The [user] [src.anchored ? "unsecures" : "secures"] the cooking pot."), \
 				span_notice("You [src.anchored ? "unsecure" : "secure"] the cooking pot.")
@@ -362,7 +362,7 @@
 	src.icon_state = "cookingpotb" // Make it look all busted up and shit
 	src.visible_message(span_warning("The cooking pot breaks!")) //Let them know they're stupid
 	src.broken = 2 // Make it broken so it can't be used util fixed
-	src.flags = null //So you can't add condiments
+	src.flags = NONE //So you can't add condiments
 	src.operating = 0 // Turn it off again aferwards
 	SStgui.update_uis(src)
 	soundloop.stop()
@@ -385,7 +385,7 @@
 /obj/machinery/microwave/cookingpot/muck_finish()
 	src.visible_message(span_warning("The cooking pot gets covered in muck!"))
 	src.dirty = 100 // Make it dirty so it can't be used util cleaned
-	src.flags = null //So you can't add condiments
+	src.flags = NONE //So you can't add condiments
 	src.icon_state = "cookingpotbloody0" // Make it look dirty too
 	src.operating = 0 // Turn it off again aferwards
 	SStgui.update_uis(src)
@@ -406,7 +406,7 @@
 	name = "teleportation wand"
 	desc = "An odd wand that weighs more than it looks like it should. It has a wire protruding from it and a glass-like tip, suggesting there may be more tech behind this than magic."
 
-	icon = 'icons/obj/gun_vr.dmi'
+	icon = 'icons/obj/gun.dmi'
 	icon_state = "harpoonwand-2"
 
 /obj/item/bluespace_harpoon/wand/update_icon()
@@ -438,6 +438,7 @@
 	icon_state = "kettle"
 	ui_title = "kettle"
 	accept_drinking = 1
+	import_job = null
 
 /obj/machinery/chemical_dispenser/kettle/full
 	spawn_cartridges = list(
@@ -471,6 +472,7 @@
 	beacons_left = 3
 	cell_type = /obj/item/cell/device
 	origin_tech = list(TECH_MAGNET = 5, TECH_BLUESPACE = 5)
+	special_handling = TRUE
 
 /obj/item/perfect_tele_beacon/magic
 	name = "teleportation page"
@@ -479,6 +481,9 @@
 	icon_state = "page"
 
 /obj/item/perfect_tele/magic/attack_self(mob/user, var/radial_menu_anchor = src)
+	. = ..(user, radial_menu_anchor)
+	if(.)
+		return TRUE
 	if(loc_network)
 		for(var/obj/item/perfect_tele_beacon/stationary/nb in GLOB.premade_tele_beacons)
 			if(nb.tele_network == loc_network)
@@ -534,7 +539,7 @@ This device records all warnings given and teleport events for admin review in c
 /obj/item/slow_sizegun/magic
 	name = "wand of growth and shrinking"
 	desc = "A wand said to be able to shrink or grow it's targets, it's encrusted with glowing gems and a... trigger?"
-	icon = 'icons/obj/gun_vr.dmi'
+	icon = 'icons/obj/gun.dmi'
 	icon_state = "sizegun-magic-0"
 	base_icon_state = "sizegun-magic"
 

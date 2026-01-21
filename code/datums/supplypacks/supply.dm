@@ -34,6 +34,19 @@
 	containertype = /obj/structure/closet/crate/freezer/centauri
 	containername = "Artisanal food crate"
 
+/datum/supply_pack/supply/condiments
+	name = "Cooking seasonings crate"
+	desc = "Essential seasonings and spices for cooking."
+	contains = list(
+			/obj/item/reagent_containers/food/condiment/small/saltshaker = 6,
+			/obj/item/reagent_containers/food/condiment/small/peppermill = 6,
+			/obj/item/reagent_containers/food/condiment/spacespice = 3,
+			/obj/item/reagent_containers/food/condiment/sugar = 3,
+			)
+	cost = 30
+	containertype = /obj/structure/closet/crate/freezer/centauri
+	containername = "Cooking seasonings crate"
+
 
 /datum/supply_pack/supply/toner
 	name = "Toner cartridges"
@@ -143,7 +156,7 @@
 	cost = 10
 	containertype = /obj/structure/closet/crate/secure/xion
 	containername = "Shaft miner equipment"
-	access = access_mining
+	access = ACCESS_MINING
 
 /* //No longer supported on our current maps, as it requires specialized dropoff beacons and the pathfinding doesn't work well on multi-z
 //plus we have the destination tagger
@@ -207,7 +220,7 @@
 	cost=25
 	containertype = /obj/structure/closet/crate/secure/xion
 	containername = JOB_EXPLORER + " equipment"
-	access = list(access_eva, access_explorer)
+	access = list(ACCESS_EVA, ACCESS_EXPLORER)
 
 /datum/supply_pack/pilotgear
 	name= JOB_PILOT + " gear"
@@ -233,7 +246,7 @@
 	cost=20
 	containertype = /obj/structure/closet/crate/secure/xion
 	containername =  JOB_PILOT + " equipment"
-	access = access_pilot
+	access = ACCESS_PILOT
 
 /datum/supply_pack/supply/foodcubes
 	name = "Emergency food cubes"
@@ -272,7 +285,7 @@
 	cost = 75
 	containertype = /obj/structure/closet/crate/secure/xion
 	containername = JOB_PATHFINDER + " equipment"
-	access = list(access_explorer)
+	access = list(ACCESS_EXPLORER)
 
 /datum/supply_pack/supply/postal_service
 	name = "Postal Service Supplies"

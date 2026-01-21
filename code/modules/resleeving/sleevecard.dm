@@ -6,6 +6,7 @@
 	show_messages = 0
 	var/emagged = FALSE
 	matter = list(MAT_STEEL = 4000, MAT_GLASS = 4000)
+	special_handling = TRUE
 
 /obj/item/paicard/sleevecard/attack_ghost(mob/user as mob)
 	return
@@ -18,7 +19,7 @@
 			var/datum/transcore_db/db = SStranscore.db_by_mind_name(M.name)
 			if(db)
 				to_chat(user, span_notice("You begin uploading [M.name] into \the [src]."))
-				if(do_after(user,8 SECONDS,src))
+				if(do_after(user, 8 SECONDS, target = src))
 					var/datum/transhuman/mind_record/record = db.backed_up[M.name]
 					to_chat(user, span_notice("You have successfully uploaded [M.name] into \the [src]"))
 					sleeveInto(record)
@@ -66,6 +67,9 @@
 	return 0
 
 /obj/item/paicard/sleevecard/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
 	add_fingerprint(user)
 
 	if(!pai)
@@ -73,7 +77,7 @@
 	else
 		if(!emagged)
 			to_chat(user,span_notice("\The [src] displays the name '[pai]'."))
-		else ..()
+		else ..(user, TRUE)
 
 /mob/living/silicon/pai/infomorph
 	name = "sleevecard" //Has the same name as the card for consistency, but this is the MOB in the card.

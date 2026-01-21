@@ -117,14 +117,14 @@
 		to_chat(src, span_warning("This is going to cause [B] to keep bleeding!"))
 		to_chat(B, span_danger("You are going to keep bleeding from this bite!"))
 
-	if(do_after(src, 300, B)) //Thrirty seconds.
+	if(do_after(src, 30 SECONDS, target = B))
 		if(!Adjacent(B)) return
 		if(noise)
 			src.visible_message(span_infoplain(span_red(span_bold("[src] suddenly extends their fangs and plunges them down into [B]'s neck!"))))
 		else
 			src.visible_message(span_infoplain(span_red(span_italics("[src] suddenly extends their fangs and plunges them down into [B]'s neck!"))), range = 1)
 		if(bleed)
-			B.apply_damage(10, BRUTE, BP_HEAD, blocked = 0, soaked = 0, sharp = TRUE, edge = FALSE)
+			B.apply_damage(10, BRUTE, BP_HEAD, blocked = 0, sharp = TRUE, edge = FALSE)
 			var/obj/item/organ/external/E = B.get_organ(BP_HEAD)
 			if(!(E.status & ORGAN_BLEEDING))
 				E.status |= ORGAN_BLEEDING //If 10 points of piercing didn't make the organ bleed, we are making it bleed.
@@ -197,17 +197,17 @@
 			if(100)
 				C.nutrition = (C.nutrition + T.nutrition)
 				T.nutrition = 0 //Completely drained of everything.
-				var/damage_to_be_applied = T.species.total_health //Get their max health.
+				var/damage_to_be_applied = T.getMaxHealth() //Get their max health.
 				T.apply_damage(damage_to_be_applied, HALLOSS) //Knock em out.
-				C.absorbing_prey = 0
+				C.absorbing_prey = FALSE
 				to_chat(C, span_notice("You have completely drained [T], causing them to pass out."))
 				to_chat(T, span_danger("You feel weak, as if you have no control over your body whatsoever as [C] finishes draining you.!"))
 				add_attack_logs(C,T,"Succubus drained")
 				return
 
-		if(!do_mob(src, T, 50) || G.state != GRAB_NECK) //One drain tick every 5 seconds.
+		if(!do_after(src, 5 SECONDS, T) || G.state != GRAB_NECK) //One drain tick every 5 seconds.
 			to_chat(src, span_warning("Your draining of [T] has been interrupted!"))
-			C.absorbing_prey = 0
+			C.absorbing_prey = FALSE
 			return
 
 /mob/living/carbon/human/proc/succubus_drain_lethal()
@@ -267,7 +267,7 @@
 					to_chat(T, span_danger("You feel completely drained as [src] finishes draining you and begins to move onto draining you lethally, but you are too strong for them to do so!"))
 					nutrition = (nutrition + T.nutrition)
 					T.nutrition = 0 //Completely drained of everything.
-					var/damage_to_be_applied = T.species.total_health //Get their max health.
+					var/damage_to_be_applied = T.getMaxHealth() //Get their max health.
 					T.apply_damage(damage_to_be_applied, HALLOSS) //Knock em out.
 					absorbing_prey = 0 //Clean this up before we return
 					return
@@ -294,16 +294,16 @@
 				if(soulgem?.flag_check(SOULGEM_ACTIVE | SOULGEM_CATCHING_DRAIN, TRUE))
 					soulgem.catch_mob(T)
 				T.apply_damage(500, OXY) //Kill them.
-				absorbing_prey = 0
+				absorbing_prey = FALSE
 				to_chat(src, span_notice("You have completely drained [T], killing them in the process."))
 				to_chat(T, span_danger(span_massive("You... Feel... So... Weak...")))
 				visible_message(span_danger("[src] seems to finish whatever they were doing to [T]."))
 				add_attack_logs(src,T,"Succubus drained (lethal)")
 				return
 
-		if(!do_mob(src, T, 50) || G.state != GRAB_NECK) //One drain tick every 5 seconds.
+		if(!do_after(src, 5 SECONDS, T) || G.state != GRAB_NECK) //One drain tick every 5 seconds.
 			to_chat(src, span_warning("Your draining of [T] has been interrupted!"))
-			absorbing_prey = 0
+			absorbing_prey = FALSE
 			return
 
 /mob/living/carbon/human/proc/slime_feed()
@@ -355,16 +355,16 @@
 			if(100)
 				T.nutrition = (T.nutrition + C.nutrition)
 				C.nutrition = 0 //Completely drained of everything.
-				C.absorbing_prey = 0
+				C.absorbing_prey = FALSE
 				to_chat(C, span_danger("You have completely fed [T] every part of your body!"))
 				to_chat(T, span_notice("You feel quite strong and well fed, as [C] finishes feeding \himself to you!"))
 				add_attack_logs(C,T,"Slime fed")
 				C.feed_grabbed_to_self_falling_nom(T,C) //Reused this proc instead of making a new one to cut down on code usage.
 				return
 
-		if(!do_mob(src, T, 50) || !G.state) //One drain tick every 5 seconds.
+		if(!do_after(src, 5 SECONDS, T) || !G.state) //One drain tick every 5 seconds.
 			to_chat(src, span_warning("Your feeding of [T] has been interrupted!"))
-			C.absorbing_prey = 0
+			C.absorbing_prey = FALSE
 			return
 
 /mob/living/carbon/human/proc/succubus_drain_finalize()
@@ -493,7 +493,7 @@
 	last_special = world.time + vore_shred_time
 	visible_message(span_danger("[src] appears to be preparing to do something to [T]!")) //Let everyone know that bad times are ahead
 
-	if(do_after(src, vore_shred_time, T)) //Ten seconds. You have to be in a neckgrab for this, so you're already in a bad position.
+	if(do_after(src, vore_shred_time, target = T)) //Ten seconds. You have to be in a neckgrab for this, so you're already in a bad position.
 		if(can_shred(T) != T)
 			to_chat(src,span_warning("Looks like you lost your chance..."))
 			return
@@ -634,7 +634,7 @@
 		to_chat(src, span_warning("You can't do that in your current state."))
 		return
 
-	if(do_after(src, 25))
+	if(do_after(src, 25, target = src))
 		var/obj/item/storage/vore_egg/bugcocoon/C = new(loc)
 		forceMove(C)
 
@@ -726,7 +726,7 @@
 	to_chat(target, span_critical("Something begins to circle around you in the water!")) //Dun dun...
 	var/starting_loc = target.loc
 
-	if(do_after(src, 50))
+	if(do_after(src, 5 SECONDS, target))
 		if(target.loc != starting_loc)
 			to_chat(target, span_warning("You got away from whatever that was..."))
 			to_chat(src, span_notice("They got away."))
@@ -734,9 +734,9 @@
 		if(target.buckled) //how are you buckled in the water?!
 			target.buckled.unbuckle_mob()
 		target.visible_message(span_vwarning("\The [target] suddenly disappears, being dragged into the water!"),\
-			span_vdanger("You are dragged below the water and feel yourself slipping directly into \the [src]'s [vore_selected]!"))
-		to_chat(src, span_vnotice("You successfully drag \the [target] into the water, slipping them into your [vore_selected]."))
-		target.forceMove(src.vore_selected)
+			span_vdanger("You are dragged below the water and feel yourself slipping directly into \the [src]'s [vore_selected.get_belly_name()]!"))
+		to_chat(src, span_vnotice("You successfully drag \the [target] into the water, slipping them into your [vore_selected.get_belly_name()]."))
+		vore_selected.nom_atom(target)
 
 /mob/living/carbon/human/proc/toggle_pain_module()
 	set name = "Toggle pain simulation."
@@ -1158,7 +1158,7 @@
 
 
 		visible_message(span_warning("[src] is preparing to [trait_injection_verb] [target]!"))
-		if(do_after(src, 50, target)) //A decent enough timer.
+		if(do_after(src, 5 SECONDS, target)) //A decent enough timer.
 			add_attack_logs(src,target,"Injection trait ([trait_injection_selected], [trait_injection_amount])")
 			if(target.reagents && (trait_injection_amount > 0) && !synth)
 				target.reagents.add_reagent(trait_injection_selected, trait_injection_amount)
@@ -1223,7 +1223,7 @@
 
 	src.visible_message(span_bolddanger("[src] moves their head next to [T]'s neck, seemingly looking for something!"))
 
-	if(do_after(src, 300, T)) //Thrirty seconds.
+	if(do_after(src, 30 SECONDS, target = T)) //Thrirty seconds.
 		if(choice == REAGENT_APHRODISIAC)
 			src.show_message(span_warning("You sink your fangs into [T] and inject your aphrodisiac!"))
 			src.visible_message(span_red("[src] sinks their fangs into [T]!"))
@@ -1246,7 +1246,7 @@
 	description = "A unknown liquid, it smells sweet"
 	metabolism = REM * 0.8
 	color = "#8A0829"
-	scannable = 0
+	scannable = SCANNABLE_ADVANCED
 	wiki_flag = WIKI_SPOILER
 	supply_conversion_value = REFINERYEXPORT_VALUE_PROCESSED
 	industrial_use = REFINERYEXPORT_REASON_MATSCI
@@ -1264,7 +1264,7 @@
 	description = "A unknown liquid, it doesn't smell"
 	metabolism = REM * 0.5
 	color = "#41029B"
-	scannable = 0
+	scannable = SCANNABLE_ADVANCED
 	supply_conversion_value = REFINERYEXPORT_VALUE_PROCESSED
 	industrial_use = REFINERYEXPORT_REASON_MATSCI
 
@@ -1284,7 +1284,7 @@
 	description = "A unknown liquid, it doesn't smell"
 	metabolism= REM * 0.5
 	color = "#41029B"
-	scannable = 0
+	scannable = SCANNABLE_ADVANCED
 	supply_conversion_value = REFINERYEXPORT_VALUE_PROCESSED
 	industrial_use = REFINERYEXPORT_REASON_MATSCI
 
@@ -1317,7 +1317,7 @@ var/eggs = 0
 	if(!choice)
 		return
 
-	if(do_after(src, 300)) //Thrirty seconds.
+	if(do_after(src, 30 SECONDS, target = src)) //Thrirty seconds.
 		if(choice == "Make a Egg")
 			src.show_message(span_warning("You feel your belly bulging a bit, you made an egg!"))
 			C.nutrition -=150
@@ -1363,4 +1363,51 @@ var/eggs = 0
 	to_chat(T, span_danger("You feel a stabbing pain as you are stung!"))
 	src.visible_message(span_infoplain(span_red("[src] sinks their stinger into [T]!")))
 	T.bloodstr.add_reagent(REAGENT_ID_CONDENSEDCAPSAICINV,3)
-	last_special = world.time + 50 // Many little jabs instead of one big one
+	last_special = world.time + (5 SECONDS) // Many little jabs instead of one big one
+
+/mob/living/proc/absorb_devour()
+	if(!absorbed || !isbelly(loc))
+		return
+	if(!isliving(loc.loc))
+		return
+	var/mob/living/pred = loc.loc
+	var/obj/belly/belly = loc
+	var/list/targets = list()
+	for(var/mob/living/potentialtarget in range(1, pred))
+		if(!isliving(potentialtarget)) //Don't eat anything that isn't mob/living. Failsafe.
+			continue
+		if(potentialtarget == pred)
+			continue
+		if(potentialtarget.devourable)
+			targets += potentialtarget
+	if(!(targets.len))
+		to_chat(src, span_notice("No eligible targets found."))
+		return
+	var/mob/living/target = tgui_input_list(src, "Please select a target.", "Victim", targets)
+	if(!absorbed || !isbelly(loc))
+		return
+	if(!isliving(loc.loc))
+		return
+	if(!target)
+		return
+	if(!isliving(target)) //Safety.
+		to_chat(src, span_warning("You need to select a living target!"))
+		return
+	if (get_dist(src,target) >= 2)
+		to_chat(src, span_warning("You need to be closer to do that."))
+		return
+	target.visible_message(span_vnotice("\The [pred]'s [belly] seems interested in \the [target]."),\
+			span_vwarning("\The [pred]'s [belly] threatens to [lowertext(belly.vore_verb)] you!"))
+	to_chat(pred, span_vnotice("Your [belly] tries to [lowertext(belly.vore_verb)] \the [target].")) //people who want this will often be unaware pred players, so I'm making the warning a bit smaller text for them
+	to_chat(pred, span_vwarning("You look for a chance to [lowertext(belly.vore_verb)] \the [target]."))
+	var/starting_loc = target.loc
+	if(do_after(src, 5 SECONDS, target))
+		if(target.loc != starting_loc)
+			to_chat(src, span_notice("\The [target] is no longer within reach."))
+			return
+		if(target.buckled)
+			target.buckled.unbuckle_mob()
+		to_chat(src, span_vwarning("You manage to [lowertext(belly.vore_verb)] \the [target]!"))
+		to_chat(pred, span_vnotice("Your [belly] manages to [lowertext(belly.vore_verb)] \the [target]."))
+		to_chat(target, span_vwarning("You are [lowertext(belly.vore_verb)]ed by \The [pred]'s [belly]!"))
+		return pred.begin_instant_nom(src, target, pred, belly, FALSE)

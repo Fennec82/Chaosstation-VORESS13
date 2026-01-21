@@ -6,7 +6,7 @@ GLOBAL_LIST_INIT(engwords, list("travel", "blood", "join", "hell", "destroy", "t
 GLOBAL_LIST_INIT(rnwords, list("ire","ego","nahlizet","certum","veri","jatkaa","mgar","balaq", "karazet", "geeri"))
 
 /client/proc/check_words() // -- Urist
-	set category = "Admin.Secrets"
+	set category = ADMIN_CATEGORY_SECRETS
 	set name = "Check Rune Words"
 	set desc = "Check the rune-word meaning"
 	if(!GLOB.cultwords["travel"])
@@ -69,15 +69,15 @@ GLOBAL_LIST_INIT(rnwords, list("ire","ego","nahlizet","certum","veri","jatkaa","
 	. = ..()
 	blood_image = image(loc = src)
 	blood_image.override = 1
-	for(var/mob/living/silicon/ai/AI in GLOB.player_list)
-		if(AI.client)
-			AI.client.images += blood_image
+	for(var/mob/living/silicon/ai/our_ai in GLOB.player_list)
+		if(our_ai.client)
+			our_ai.client.images += blood_image
 	GLOB.rune_list.Add(src)
 
 /obj/effect/rune/Destroy()
-	for(var/mob/living/silicon/ai/AI in GLOB.player_list)
-		if(AI.client)
-			AI.client.images -= blood_image
+	for(var/mob/living/silicon/ai/our_ai in GLOB.player_list)
+		if(our_ai.client)
+			our_ai.client.images -= blood_image
 	qdel(blood_image)
 	blood_image = null
 	GLOB.rune_list.Remove(src)
@@ -191,6 +191,7 @@ GLOBAL_LIST_INIT(rnwords, list("ire","ego","nahlizet","certum","veri","jatkaa","
 	unique = 1
 	var/tomedat = ""
 	var/list/words = list("ire" = "ire", "ego" = "ego", "nahlizet" = "nahlizet", "certum" = "certum", "veri" = "veri", "jatkaa" = "jatkaa", "balaq" = "balaq", "mgar" = "mgar", "karazet" = "karazet", "geeri" = "geeri")
+	occult_tier = 1
 
 	tomedat = {"<html>
 				<head>
@@ -314,8 +315,13 @@ GLOBAL_LIST_INIT(rnwords, list("ire","ego","nahlizet","certum","veri","jatkaa","
 	to_chat(M, span_danger("You feel searing heat inside!"))
 
 
-/obj/item/book/tome/attack_self(mob/living/user as mob)
+/obj/item/book/tome/attack_self(mob/living/user)
+	. = ..(user)
+	if(.)
+		return TRUE
 	if(!user.canmove || user.stat || user.restrained())
+		return
+	if(occult_tier > 1) //This is a low tier book. If it's a higher tier, use ITS parent call instead of  continuing.
 		return
 
 	if(!GLOB.cultwords["travel"])
@@ -404,7 +410,7 @@ GLOBAL_LIST_INIT(rnwords, list("ire","ego","nahlizet","certum","veri","jatkaa","
 			V.show_message(span_danger("\The [user] slices open a finger and begins to chant and paint symbols on the floor."), 3, span_danger("You hear chanting."), 2)
 		to_chat(user, span_danger("You slice open one of your fingers and begin drawing a rune on the floor whilst chanting the ritual that binds your life essence with the dark arcane energies flowing through the surrounding world."))
 		user.take_overall_damage((rand(9)+1)/10) // 0.1 to 1.0 damage
-		if(do_after(user, 50))
+		if(do_after(user, 5 SECONDS, target = src))
 			var/area/A = get_area(user)
 			log_and_message_admins("created \an [chosen_rune] rune at \the [A.name] - [user.loc.x]-[user.loc.y]-[user.loc.z].")
 			if(user.get_active_hand() != src)
@@ -435,8 +441,12 @@ GLOBAL_LIST_INIT(rnwords, list("ire","ego","nahlizet","certum","veri","jatkaa","
 
 /obj/item/book/tome/imbued //admin tome, spawns working runes without waiting
 	w_class = ITEMSIZE_SMALL
+	occult_tier = 2
 	var/cultistsonly = 1
-/obj/item/book/tome/imbued/attack_self(mob/user as mob)
+/obj/item/book/tome/imbued/attack_self(mob/user)
+	. = ..(user)
+	if(.)
+		return TRUE
 	if(src.cultistsonly && !iscultist(user))
 		return
 	if(!GLOB.cultwords["travel"])

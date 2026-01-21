@@ -45,8 +45,9 @@ Loot piles can be depleted, if loot_depleted is turned on.  Note that players wh
 
 		//Do the searching
 		busy = TRUE
-		if(do_after(user,rand(4 SECONDS,6 SECONDS),src))
+		if(do_after(user, rand(4 SECONDS,6 SECONDS), target = src))
 			SEND_SIGNAL(src,COMSIG_LOOT_REWARD,L,searchedby)
+			SEND_GLOBAL_SIGNAL(COMSIG_GLOB_TRASHPILE_SEARCHED,L,searchedby)
 		busy = FALSE
 	else
 		return ..()
