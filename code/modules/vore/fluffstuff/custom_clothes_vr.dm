@@ -780,44 +780,44 @@
 	icon_state = "khi_uniform"
 
 /obj/item/clothing/under/rank/khi/cmd //Command version
-	name = "sleek command suit"
-	desc = "A sleek, neocorporate style uniform. An extra-comfortable command one, at that."
+	name = "KHI command suit"
+	desc = "A Kitsuhana Heavy Industries uniform. An extra-comfortable command one, at that."
 	icon_state = "khi_uniform_cmd"
 	armor = list(melee = 0, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 0, rad = 0)
 
 /obj/item/clothing/under/rank/khi/sec //Security version
-	name = "sleek security suit"
-	desc = "A sleek, neocorporate style uniform. This one has angry red security stripes. Keepin' the peace in style."
+	name = "KHI security suit"
+	desc = "A Kitsuhana Heavy Industries uniform. This one has angry red security stripes. Keeping the peace in style."
 	icon_state = "khi_uniform_sec"
 	armor = list(melee = 10, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 0, rad = 0)
 
 /obj/item/clothing/under/rank/khi/med //Medical version
-	name = "sleek medical suit"
-	desc = "A sleek, neocorporate style uniform. The medical version. Why not just get a new body, anyway?"
+	name = "KHI medical suit"
+	desc = "A Kitsuhana Heavy Industries uniform. The medical version. Why not just get a new body, anyway?"
 	icon_state = "khi_uniform_med"
 	armor = list(melee = 0, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 10, rad = 0)
 
 /obj/item/clothing/under/rank/khi/eng //Engineering version
-	name = "sleek engineering suit"
-	desc = "A sleek, neocorporate style uniform. One fit for an engineer, by the looks of it."
+	name = "KHI engineering suit"
+	desc = "A Kitsuhana Heavy Industries uniform. One fit for an engineer, by the looks of it."
 	icon_state = "khi_uniform_eng"
 	armor = list(melee = 0, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 0, rad = 10)
 
 /obj/item/clothing/under/rank/khi/sci //Science version
-	name = "sleek science suit"
-	desc = "A sleek, neocorporate style uniform. For performing science in, based on the color!"
+	name = "KHI science suit"
+	desc = "A Kitsuhana Heavy Industries uniform. For performing science in, based on the color!"
 	icon_state = "khi_uniform_sci"
 	armor = list(melee = 0, bullet = 0, laser = 0, energy = 0, bomb = 10, bio = 0, rad = 0)
 
 /obj/item/clothing/under/rank/khi/crg //Cargo version
-	name = "sleek cargo suit"
-	desc = "A sleek, neocorporate style uniform. Looks like it's in supply and cargo division colors. Heavy industry means heavy lifting, after all."
+	name = "KHI cargo suit"
+	desc = "A Kitsuhana Heavy Industries uniform. Looks like it's in supply and cargo division colors. Heavy industry means heavy lifting, after all."
 	icon_state = "khi_uniform_crg"
 	armor = list(melee = 0, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 0, rad = 0)
 
 /obj/item/clothing/under/rank/khi/civ //Science version
-	name = "sleek civilian suit"
-	desc = "A sleek, neocorporate style uniform. Snazzy silver trim marks this is as the general civilian branch. Smells like paperwork and bureaucracy."
+	name = "KHI civilian suit"
+	desc = "A Kitsuhana Heavy Industries uniform. Snazzy silver trim marks this is as the general civilian branch. Smells like paperwork and bureaucracy."
 	icon_state = "khi_uniform_civ"
 	armor = list(melee = 0, bullet = 0, laser = 0, energy = 0, bomb = 0, bio = 0, rad = 0)
 
